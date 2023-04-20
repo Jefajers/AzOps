@@ -286,6 +286,7 @@
                 continue
             }
             Write-PSFMessage -Level Warning -Message "IamHere"
+            Write-PSFMessage -Level Warning -Message "$(Get-Content $deletion)"
             $templateContent = Get-Content $deletion | ConvertFrom-Json -AsHashtable
             $schemavalue = '$schema'
             if ($templateContent.$schemavalue -like "*deploymentParameters.json#" -and (-not($templateContent.parameters.input.value.type -in $DeletionSupportedResourceType))) {
