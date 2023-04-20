@@ -285,7 +285,7 @@
             if ($deletion.EndsWith(".bicep")) {
                 continue
             }
-
+            Write-PSFMessage -Level Warning -Message "IamHere"
             $templateContent = Get-Content $deletion | ConvertFrom-Json -AsHashtable
             $schemavalue = '$schema'
             if ($templateContent.$schemavalue -like "*deploymentParameters.json#" -and (-not($templateContent.parameters.input.value.type -in $DeletionSupportedResourceType))) {
