@@ -215,12 +215,18 @@
         }
         if ($DeleteSetContents -and $deleteSet) {
             Write-PSFMessage -Level Important @common -String 'Invoke-AzOpsPush.Change.Delete'
-            $DeleteSetContents = ($DeleteSetContents -join "" -split "-- ")[0, 1, 2] | Where-Object { $_ }
+            $delimiter = "<azops$(Get-Random -Minimum 100 -Maximum 1000)separatorvalue>"
+            $DeleteSetContents = $DeleteSetContents -join $delimiter -split "$delimiter-- " -replace $delimiter,""
             foreach ($item in $deleteSet) {
                 Write-PSFMessage -Level Important @common -String 'Invoke-AzOpsPush.Change.Delete.File' -StringValues $item
                 foreach ($content in $DeleteSetContents) {
                     if ($content.Contains($item)) {
-                        $jsonValue = $content.replace($item, "")
+                        if ($content.StartsWith("-- ")) {
+                            $jsonValue = $content.replace("-- $item", "")
+                        }
+                        else {
+                            $jsonValue = $content.replace($item, "")
+                        }
                         if (-not(Test-Path -Path (Split-Path -Path $item))) {
                             New-Item -Path (Split-Path -Path $item) -ItemType Directory | Out-Null
                         }
